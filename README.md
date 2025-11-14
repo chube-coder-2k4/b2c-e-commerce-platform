@@ -73,21 +73,24 @@
 ---
 
 ## 🗂️ Project Structure
-src/main/java/com/chubecommerce
-┣ auth/ # JWT, OAuth2, OTP
-┣ user/ # User, role management
-┣ product/ # Product, category, image
-┣ cart/ # Cart & cart items
-┣ order/ # Order, order items
-┣ payment/ # VNPAY integration
-┣ common/ # Constants, utils, exception handler
-┣ scheduler/ # Cron jobs
-┣ event/ # Publisher & listener (RabbitMQ)
-┣ websocket/ # Realtime notification
-┣ config/ # Security, Redis, Flyway, Cloudinary, etc.
-┗ main/java/com/...Application.java
 
----
+```text
+src/main/java/com/chubecommerce
+┣ auth/                 # JWT, OAuth2, OTP
+┣ user/                 # User, role management
+┣ product/              # Product, category, image
+┣ cart/                 # Cart & cart items
+┣ order/                # Order, order items
+┣ payment/              # VNPAY integration
+┣ common/               # Constants, utils, exception handler
+┣ scheduler/            # Cron jobs
+┣ event/                # Publisher & listener (RabbitMQ)
+┣ websocket/            # Realtime notification
+┣ config/               # Security, Redis, Flyway, Cloudinary, etc.
+┗ ChubeCommerceApplication.java
+```
+
+----
 
 ## 🧱 Database Design (PostgreSQL)
 
