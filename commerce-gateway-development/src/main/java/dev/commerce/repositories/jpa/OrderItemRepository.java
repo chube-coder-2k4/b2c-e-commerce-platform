@@ -1,6 +1,6 @@
-package dev.commerce.repositories;
+package dev.commerce.repositories.jpa;
 
-import dev.commerce.entitys.ProductImage;
+import dev.commerce.entitys.OrderItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public interface ProductImageRepository extends JpaRepository<ProductImage, UUID>, JpaSpecificationExecutor<ProductImage> {
+public interface OrderItemRepository extends JpaRepository<OrderItem, UUID>, JpaSpecificationExecutor<OrderItem> {
 }
