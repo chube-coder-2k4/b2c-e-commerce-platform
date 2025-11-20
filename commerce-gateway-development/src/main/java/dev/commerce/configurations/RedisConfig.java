@@ -13,7 +13,6 @@ import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -29,7 +28,9 @@ public class RedisConfig {
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
         log.info("Connecting to Redis at {}:{}", redisHost, redisPort);
-        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(redisHost, redisPort);
+        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
+        config.setHostName(redisHost);
+        config.setPort(redisPort);
         return new JedisConnectionFactory(config);
     } // this method jedisConnectionFactory này có nv là tạo ra một kết nối đến máy chủ Redis sử dụng cấu host và port  cung cấp từ file cấu hình ứng dụng
 

@@ -22,6 +22,10 @@ spring:
     baseline-on-migrate: true
     validate-on-migrate: true
     baseline-version: 1
+  data:
+    redis:
+      host: localhost
+      port: 6379
 management:
   endpoint:
     health:
@@ -31,10 +35,6 @@ management:
       base-path: /api/v1/actuator
       exposure:
         include: "health, info"
-  data:
-    redis:
-      host: localhost
-      port: 6379
 cloudinary:
   cloud-name: dfupyxrmr
   api-key: 234171996373849
