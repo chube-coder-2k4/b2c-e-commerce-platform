@@ -2,6 +2,7 @@ package dev.commerce.entitys;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.redis.core.RedisHash;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -12,6 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@RedisHash("RefreshToken")
 public class RefreshToken extends BaseEntity{
     @Id
     private UUID id;

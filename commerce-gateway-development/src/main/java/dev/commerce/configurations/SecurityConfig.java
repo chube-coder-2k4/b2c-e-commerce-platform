@@ -30,6 +30,7 @@ public class SecurityConfig {
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final UserDetailsService userDetailsService;
+    private final PasswordConfig passwordConfig;
 
     // khai báo whitelist các endpoint ko cần xác thực ở đây nếu có
     private static final String[] AUTH_WHITELIST = {
@@ -45,7 +46,7 @@ public class SecurityConfig {
             @Override
             public void addCorsMappings(@NonNull CorsRegistry registry) {
                 registry.addMapping("/**") // endpoint /api/** , /auth/** , ...
-                        .allowedOrigins("http://localhost:3000") // mapping domain api http://localhost:3000 , http://example.com , ...
+                        .allowedOrigins("*") // mapping domain api http://localhost:3000 , http://example.com , ...
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*") //  header Authorization , Content-Type , ...
                         .allowCredentials(false) // cookie false allowedOrigins là * nên ko thể gửi cookie nếu là true thì chỉ rõ domain
@@ -54,10 +55,7 @@ public class SecurityConfig {
         };
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+
 
     @Bean
     public SecurityFilterChain configurer(HttpSecurity http) throws Exception {
@@ -82,7 +80,7 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
         authBuilder.userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder());
+                .passwordEncoder(passwordConfig.passwordEncoder());
         return authBuilder.build();
     }
 

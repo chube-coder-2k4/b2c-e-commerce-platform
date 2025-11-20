@@ -1,4 +1,4 @@
-package dev.commerce.repositories;
+package dev.commerce.repositories.jpa;
 
 import dev.commerce.entitys.OtpVerify;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -7,6 +7,7 @@ CREATE TABLE users (
                        password VARCHAR(255) NOT NULL,
                        full_name VARCHAR(255),
                        phone VARCHAR(20),
+                       username VARCHAR(150) UNIQUE,
                        address VARCHAR(255),
                        provider VARCHAR(50),
                        is_active BOOLEAN DEFAULT true,

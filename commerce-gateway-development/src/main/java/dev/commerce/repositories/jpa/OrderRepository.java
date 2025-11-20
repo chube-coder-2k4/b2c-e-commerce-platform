@@ -1,4 +1,4 @@
-package dev.commerce.repositories;
+package dev.commerce.repositories.jpa;
 
 import dev.commerce.entitys.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
