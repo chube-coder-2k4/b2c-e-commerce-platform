@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8085
 spring:
   profiles:
     active: @spring.profiles.active@
@@ -23,6 +23,7 @@ spring:
     baseline-on-migrate: true
     validate-on-migrate: true
     baseline-version: 1
+
 management:
   endpoint:
     health:
@@ -31,4 +32,18 @@ management:
     web:
       base-path: /api/v1/actuator
       exposure:
-        include: "health, info"
+        include: "health,info"
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+
+openapi:
+  service:
+    title: API Document
+    version: 1.0.0
+    server: http://localhost:${server.port}
