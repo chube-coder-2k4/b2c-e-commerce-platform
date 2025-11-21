@@ -130,17 +130,6 @@ VALUES
     ('eeeeeeee-5555-eeee-5555-eeeeeeee5555', '55555555-5555-5555-5555-555555555555', 'token5555', NOW() + INTERVAL '7 days', NOW(), NOW());
 
 -- ==============================
--- Insert mock data for OTP Verify
--- ==============================
-INSERT INTO otp_verify(id, user_id, otp, expired_at, is_used, type, created_at, updated_at)
-VALUES
-    ('aaaaaaaa-1111-aaaa-1111-aaaaaaaa1111', '11111111-1111-1111-1111-111111111111', '123456', NOW() + INTERVAL '5 minutes', false, 'EMAIL', NOW(), NOW()),
-    ('bbbbbbbb-2222-bbbb-2222-bbbbbbbb2222', '22222222-2222-2222-2222-222222222222', '234567', NOW() + INTERVAL '5 minutes', false, 'SMS', NOW(), NOW()),
-    ('cccccccc-3333-cccc-3333-cccccccc3333', '33333333-3333-3333-3333-333333333333', '345678', NOW() + INTERVAL '5 minutes', true, 'EMAIL', NOW(), NOW()),
-    ('dddddddd-4444-dddd-4444-dddddddd4444', '44444444-4444-4444-4444-444444444444', '456789', NOW() + INTERVAL '5 minutes', false, 'SMS', NOW(), NOW()),
-    ('eeeeeeee-5555-eeee-5555-eeeeeeee5555', '55555555-5555-5555-5555-555555555555', '567890', NOW() + INTERVAL '5 minutes', false, 'EMAIL', NOW(), NOW());
-
--- ==============================
 -- Insert mock data for Audit Log
 -- ==============================
 INSERT INTO audit_log(id, user_id, action, details, created_at, updated_at)

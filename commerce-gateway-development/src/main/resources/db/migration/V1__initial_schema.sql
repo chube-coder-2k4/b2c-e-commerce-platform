@@ -52,21 +52,6 @@ CREATE TABLE refresh_token (
                                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- Create otp_verify table
-CREATE TABLE otp_verify (
-                            id UUID PRIMARY KEY,
-                            user_id UUID NOT NULL,
-                            otp VARCHAR(10) NOT NULL,
-                            expired_at TIMESTAMP NOT NULL,
-                            is_used BOOLEAN DEFAULT false,
-                            type VARCHAR(50) NOT NULL,
-                            created_at TIMESTAMP NOT NULL,
-                            updated_at TIMESTAMP NOT NULL,
-                            created_by UUID,
-                            updated_by UUID,
-                            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);
-
 
 -- Create category table
 CREATE TABLE category (
