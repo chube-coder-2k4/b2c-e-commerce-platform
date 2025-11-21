@@ -11,7 +11,6 @@ import dev.commerce.exception.UserNotFoundException;
 import dev.commerce.redis.RefreshToken;
 import dev.commerce.repositories.jpa.UserRepository;
 import dev.commerce.services.RefreshTokenService;
-import dev.commerce.services.UserService;
 import dev.commerce.services.security.AuthenticationService;
 import dev.commerce.services.security.JwtService;
 import io.micrometer.common.util.StringUtils;
@@ -23,8 +22,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.ZoneId;
-
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -32,7 +29,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
-    private final UserService userService;
     private final RefreshTokenService tokenService;
     private final PasswordEncoder passwordEncoder;
 
@@ -61,10 +57,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public LoginResponse refreshToken(HttpServletRequest request) {
-        String token = request.getHeader("x-refresh-token");
-        if (StringUtils.isBlank(token)) {
-            throw new InvalidDataException("Invalid refresh token must be not blank");
-        }
+        String token = getRefreshToken(request);
         final String username = jwtService.extractUsername(token, TokenType.REFRESH);
         var user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found"));
         if (!jwtService.isTokenValid(token, user, TokenType.REFRESH)) {
@@ -81,10 +74,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public String logout(HttpServletRequest request) {
-        String refresh = request.getHeader("x-refresh-token");
-        if (StringUtils.isBlank(refresh)) {
-            throw new InvalidDataException("Invalid refresh token must be not blank");
-        }
+        String refresh = getRefreshToken(request);
         final String username = jwtService.extractUsername(refresh, TokenType.REFRESH);
         var user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found"));
         if (!jwtService.isTokenValid(refresh, user, TokenType.REFRESH)) {
@@ -162,6 +152,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new InvalidDataException("Invalid secret key");
         }
         return user;
+    }
+
+    private String getRefreshToken(HttpServletRequest request) {
+        String token = request.getHeader("x-refresh-token");
+        if (StringUtils.isBlank(token)) {
+            throw new InvalidDataException("Invalid refresh token must be not blank");
+        }
+        return token;
     }
 
 

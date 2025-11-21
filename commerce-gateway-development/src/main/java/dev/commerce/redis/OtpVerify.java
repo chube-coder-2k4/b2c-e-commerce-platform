@@ -20,7 +20,9 @@ public class OtpVerify {
     private String otp;
     private TypeOTP type;
     private boolean used = false;
+    private String email;
 
+    @PrePersist
     public void ensureId() {
         if (this.id == null) {
             this.id = UUID.randomUUID();

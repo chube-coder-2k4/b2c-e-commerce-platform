@@ -7,16 +7,14 @@ import dev.commerce.entitys.Users;
 import dev.commerce.exception.InvalidDataException;
 import dev.commerce.repositories.jpa.RoleRepository;
 import dev.commerce.repositories.jpa.UserRepository;
+import dev.commerce.services.MailService;
+import dev.commerce.services.OtpVerifyService;
 import dev.commerce.services.UserService;
-import io.micrometer.common.util.StringUtils;
-import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.io.UnsupportedEncodingException;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -25,41 +23,39 @@ import java.util.UUID;
 @Slf4j
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final OtpVerifyService otpVerifyService;
+    private final MailService mailService;
 
 
     @Override
-    public UUID saveUser(UserRequest request) throws MessagingException, UnsupportedEncodingException {
-        // Check if email already exists
+    public UUID saveUser(UserRequest request) {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new InvalidDataException("Email already exists");
         }
-        
-        // Check if username (email) already exists
         if (userRepository.findByUsername(request.getEmail()).isPresent()) {
             throw new InvalidDataException("Username already exists");
         }
-        
-
-        
-        // Build user entity
         Users user = Users.builder()
                 .fullName(request.getFullName())
                 .email(request.getEmail())
-                .username(request.getEmail()) // Use email as username
+                .username(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .phone(request.getPhone())
                 .address(request.getAddress())
                 .provider(LoginType.LOCAL)
-                .isVerify(false) // New users need to verify email
+                .isVerify(false)
                 .isActive(true)
                 .isLocked(false)
-                .roles(null) // Default role
+                .roles(request.getRole())
                 .build();
-        
-        // Save user to database
         Users savedUser = userRepository.save(user);
+
+        // generate OTP
+        String otp = generateOtp();
+        otpVerifyService.saveOtp(request.getEmail(), otp);
+        mailService.sendOtpMail(savedUser.getEmail(), otp);
+
         
         // TODO: Send verification email
         log.info("User created successfully with ID: {}", savedUser.getId());
@@ -94,6 +90,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(UUID userId) {
 
+    }
+
+    private String generateOtp() {
+        return String.valueOf((int)(Math.random() * 900000) + 100000);
     }
 
     @Override

@@ -1,10 +1,14 @@
 package dev.commerce.dtos.request;
 
+import dev.commerce.dtos.common.RoleName;
+import dev.commerce.entitys.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+
+import java.util.Set;
 
 @Getter
 @Setter
@@ -26,10 +30,12 @@ public class UserRequest {
     
     @Pattern(regexp = "^[0-9]{10,11}$", message = "Phone number must be 10-11 digits")
     private String phone;
-    
+
+    @NotBlank(message = "Address is required")
     private String address;
-    
-    private String roleName; // Default: USER if not provided
-    
+
     private String provider; // Default: LOCAL if not provided
+
+    @NotBlank(message = "Role is required")
+    private Set<Role> role;
 }

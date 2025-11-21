@@ -27,6 +27,8 @@ spring:
     redis:
       host: localhost
       port: 6379
+
+
 management:
   endpoint:
     health:
@@ -53,6 +55,8 @@ jwt:
   expiryDay: 7
   refreshKey: 1e34c845918564fa8b0559a3d32182e2bee5e41a466e1e636f795eaa97c1ed7c
   resetKey: 7f3c1b0e8a4f26d9c7e9f2d11a50384b62c1e77d9452fae8cb38d40a19f06b52
+
+
 
 
 
