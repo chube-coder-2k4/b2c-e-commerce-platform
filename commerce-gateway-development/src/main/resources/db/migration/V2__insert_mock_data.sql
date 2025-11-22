@@ -14,11 +14,11 @@ VALUES
 -- ==============================
 INSERT INTO role(id, name, created_at, updated_at)
 VALUES
-    ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'ROLE_USER', NOW(), NOW()),
-    ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'ROLE_ADMIN', NOW(), NOW()),
-    ('cccccccc-cccc-cccc-cccc-cccccccccccc', 'ROLE_MANAGER', NOW(), NOW()),
-    ('dddddddd-dddd-dddd-dddd-dddddddddddd', 'ROLE_SUPPORT', NOW(), NOW()),
-    ('eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', 'ROLE_GUEST', NOW(), NOW());
+    ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'USER', NOW(), NOW()),
+    ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'ADMIN', NOW(), NOW()),
+    ('cccccccc-cccc-cccc-cccc-cccccccccccc', 'MANAGER', NOW(), NOW()),
+    ('dddddddd-dddd-dddd-dddd-dddddddddddd', 'SUPPORT', NOW(), NOW()),
+    ('eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', 'GUEST', NOW(), NOW());
 
 -- ==============================
 -- Insert mock data for User_Roles
@@ -90,33 +90,33 @@ VALUES
 -- ==============================
 INSERT INTO "order"(id, user_id, order_code, total_amount, status, payment_method, shipping_address, paid_at, created_at, updated_at)
 VALUES
-    ('11111111-aaaa-1111-aaaa-111111111111', '11111111-1111-1111-1111-111111111111', 'ORD-0001', 999.99, 'PAID', 'CREDIT_CARD', 'Address 1', NOW(), NOW(), NOW()),
-    ('22222222-bbbb-2222-bbbb-222222222222', '22222222-2222-2222-2222-222222222222', 'ORD-0002', 1799.98, 'PENDING', 'PAYPAL', 'Address 2', NULL, NOW(), NOW()),
-    ('33333333-cccc-3333-cccc-333333333333', '33333333-3333-3333-3333-333333333333', 'ORD-0003', 19.99, 'PAID', 'CREDIT_CARD', 'Address 3', NOW(), NOW(), NOW()),
-    ('44444444-dddd-4444-dddd-444444444444', '44444444-4444-4444-4444-444444444444', 'ORD-0004', 49.99, 'CANCELLED', 'CREDIT_CARD', 'Address 4', NULL, NOW(), NOW()),
-    ('55555555-eeee-5555-eeee-555555555555', '55555555-5555-5555-5555-555555555555', 'ORD-0005', 29.99, 'PAID', 'PAYPAL', 'Address 5', NOW(), NOW(), NOW());
+    ('aaaaaaaa-aaaa-1111-aaaa-111111111111', '11111111-1111-1111-1111-111111111111', 'ORD-0001', 999.99, 'PAID', 'CREDIT_CARD', 'Address 1', NOW(), NOW(), NOW()),
+    ('bbbbbbbb-bbbb-2222-bbbb-222222222222', '22222222-2222-2222-2222-222222222222', 'ORD-0002', 1799.98, 'PENDING', 'PAYPAL', 'Address 2', NULL, NOW(), NOW()),
+    ('cccccccc-cccc-3333-cccc-333333333333', '33333333-3333-3333-3333-333333333333', 'ORD-0003', 19.99, 'PAID', 'CREDIT_CARD', 'Address 3', NOW(), NOW(), NOW()),
+    ('dddddddd-dddd-4444-dddd-444444444444', '44444444-4444-4444-4444-444444444444', 'ORD-0004', 49.99, 'CANCELLED', 'CREDIT_CARD', 'Address 4', NULL, NOW(), NOW()),
+    ('eeeeeeee-eeee-5555-eeee-555555555555', '55555555-5555-5555-5555-555555555555', 'ORD-0005', 29.99, 'PAID', 'PAYPAL', 'Address 5', NOW(), NOW(), NOW());
 
 -- ==============================
 -- Insert mock data for Order_Item
 -- ==============================
 INSERT INTO order_item(id, order_id, product_id, quantity, unit_price, created_at, updated_at)
 VALUES
-    ('aaaaaaaa-1111-aaaa-1111-aaaaaaaa1111', '11111111-aaaa-1111-aaaa-111111111111', '11111111-aaaa-1111-aaaa-111111111111', 1, 999.99, NOW(), NOW()),
-    ('bbbbbbbb-2222-bbbb-2222-bbbbbbbb2222', '22222222-bbbb-2222-bbbb-222222222222', '22222222-bbbb-2222-bbbb-222222222222', 2, 899.99, NOW(), NOW()),
-    ('cccccccc-3333-cccc-3333-cccccccc3333', '33333333-cccc-3333-cccc-333333333333', '33333333-cccc-3333-cccc-333333333333', 3, 19.99, NOW(), NOW()),
-    ('dddddddd-4444-dddd-4444-dddddddd4444', '44444444-dddd-4444-dddd-444444444444', '44444444-dddd-4444-dddd-444444444444', 1, 49.99, NOW(), NOW()),
-    ('eeeeeeee-5555-eeee-5555-eeeeeeee5555', '55555555-eeee-5555-eeee-555555555555', '55555555-eeee-5555-eeee-555555555555', 4, 29.99, NOW(), NOW());
+    ('aaaaaaaa-1111-aaaa-1111-aaaaaaaa1111', 'aaaaaaaa-aaaa-1111-aaaa-111111111111', '11111111-aaaa-1111-aaaa-111111111111', 1, 999.99, NOW(), NOW()),
+    ('bbbbbbbb-2222-bbbb-2222-bbbbbbbb2222', 'bbbbbbbb-bbbb-2222-bbbb-222222222222', '22222222-bbbb-2222-bbbb-222222222222', 2, 899.99, NOW(), NOW()),
+    ('cccccccc-3333-cccc-3333-cccccccc3333', 'cccccccc-cccc-3333-cccc-333333333333', '33333333-cccc-3333-cccc-333333333333', 3, 19.99, NOW(), NOW()),
+    ('dddddddd-4444-dddd-4444-dddddddd4444', 'dddddddd-dddd-4444-dddd-444444444444', '44444444-dddd-4444-dddd-444444444444', 1, 49.99, NOW(), NOW()),
+    ('eeeeeeee-5555-eeee-5555-eeeeeeee5555', 'eeeeeeee-eeee-5555-eeee-555555555555', '55555555-eeee-5555-eeee-555555555555', 4, 29.99, NOW(), NOW());
 
 -- ==============================
 -- Insert mock data for Payment
 -- ==============================
 INSERT INTO payment(id, order_id, provider, transaction_id, amount, status, paid_at, created_at, updated_at)
 VALUES
-    ('aaaaaaaa-aaaa-1111-aaaa-aaaaaaaa1111', '11111111-aaaa-1111-aaaa-111111111111', 'Stripe', 'txn-1111', 999.99, 'SUCCESS', NOW(), NOW(), NOW()),
-    ('bbbbbbbb-bbbb-2222-bbbb-bbbbbbbb2222', '22222222-bbbb-2222-bbbb-222222222222', 'PayPal', 'txn-2222', 1799.98, 'PENDING', NULL, NOW(), NOW()),
-    ('cccccccc-cccc-3333-cccc-cccccccc3333', '33333333-cccc-3333-cccc-333333333333', 'Stripe', 'txn-3333', 19.99, 'SUCCESS', NOW(), NOW(), NOW()),
-    ('dddddddd-dddd-4444-dddd-dddddddd4444', '44444444-dddd-4444-dddd-444444444444', 'Stripe', 'txn-4444', 49.99, 'FAILED', NULL, NOW(), NOW()),
-    ('eeeeeeee-eeee-5555-eeee-eeeeeeee5555', '55555555-eeee-5555-eeee-555555555555', 'PayPal', 'txn-5555', 29.99, 'SUCCESS', NOW(), NOW(), NOW());
+    ('aaaaaaaa-aaaa-1111-aaaa-aaaaaaaa1111', 'aaaaaaaa-aaaa-1111-aaaa-111111111111', 'Stripe', 'txn-1111', 999.99, 'SUCCESS', NOW(), NOW(), NOW()),
+    ('bbbbbbbb-bbbb-2222-bbbb-bbbbbbbb2222', 'bbbbbbbb-bbbb-2222-bbbb-222222222222', 'PayPal', 'txn-2222', 1799.98, 'PENDING', NULL, NOW(), NOW()),
+    ('cccccccc-cccc-3333-cccc-cccccccc3333', 'cccccccc-cccc-3333-cccc-333333333333', 'Stripe', 'txn-3333', 19.99, 'SUCCESS', NOW(), NOW(), NOW()),
+    ('dddddddd-dddd-4444-dddd-dddddddd4444', 'dddddddd-dddd-4444-dddd-444444444444', 'Stripe', 'txn-4444', 49.99, 'FAILED', NULL, NOW(), NOW()),
+    ('eeeeeeee-eeee-5555-eeee-eeeeeeee5555', 'eeeeeeee-eeee-5555-eeee-555555555555', 'PayPal', 'txn-5555', 29.99, 'SUCCESS', NOW(), NOW(), NOW());
 
 -- ==============================
 -- Insert mock data for Refresh Token

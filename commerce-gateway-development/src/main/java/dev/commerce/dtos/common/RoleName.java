@@ -1,9 +1,10 @@
 package dev.commerce.dtos.common;
 
 public enum RoleName {
+    USER,
     ADMIN,
-    MEMBER,
-    SELLER,
-    MANAGER
+    MANAGEMENT,
+    SUPPORT,
+    GUEST
 
 }
