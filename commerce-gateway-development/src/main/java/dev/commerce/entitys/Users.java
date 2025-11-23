@@ -78,6 +78,6 @@ public class Users extends BaseEntity implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return isActive;
+        return isActive && isVerify;
     }
 }
