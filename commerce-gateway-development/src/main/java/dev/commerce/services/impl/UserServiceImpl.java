@@ -86,6 +86,7 @@ public class UserServiceImpl implements UserService {
         user.setPhone(request.getPhone());
         user.setAddress(request.getAddress());
         userRepository.save(user);
+        log.info("User updated successfully with ID: {}", user.getId());
         return user.getId();
     }
 
@@ -98,16 +99,21 @@ public class UserServiceImpl implements UserService {
         if(user.isVerify()) {
             return "User already verified";
         }
+        log.info("Confirming user with email: {}", email);
         return null;
     }
 
     @Override
     public void deleteUser(UUID userId) {
-        userRepository.deleteById(userId);
+        Users user = userRepository.findById(userId).orElseThrow(()-> new RuntimeException("User not found"));
+        user.setActive(false);
+        userRepository.save(user);
+        log.info("User deleted successfully with ID: {}", userId);
     }
 
     @Override
     public Users findByEmail(String email) {
+        log.info("Finding user by email: {}", email);
         return userRepository.findByEmail(email).orElse(null);
     }
 

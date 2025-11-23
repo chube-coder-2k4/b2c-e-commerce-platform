@@ -2,6 +2,7 @@ package dev.commerce.controllers;
 
 import dev.commerce.dtos.request.UserFilterRequest;
 import dev.commerce.dtos.request.UserRequest;
+import dev.commerce.dtos.request.UserUpdateRequest;
 import dev.commerce.dtos.response.UserResponse;
 import dev.commerce.entitys.Users;
 import dev.commerce.services.UserService;
@@ -61,4 +62,31 @@ public class UserController {
     public ResponseEntity<Page<UserResponse>> getAllUsers(@RequestBody UserFilterRequest request) {
         return ResponseEntity.ok(userService.getAllUserWithFilter(request));
     }
+
+    @Operation(summary = "Update infor user", description = "Update user information by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User updated successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data"),
+            @ApiResponse(responseCode = "404", description = "User not found")
+    })
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateUser(@PathVariable UUID id, @Valid @RequestBody UserUpdateRequest request) {
+        userService.updateUser(id, request);
+        return ResponseEntity.ok("User updated successfully");
+    }
+
+    @Operation(summary = "Delete user", description = "Delete user by ID - soft delete")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "User not found")
+    })
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable UUID id) {
+        userService.deleteUser(id);
+        return ResponseEntity.ok("User deleted successfully");
+    }
+
+
 }
