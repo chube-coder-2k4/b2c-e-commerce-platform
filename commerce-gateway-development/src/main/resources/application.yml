@@ -6,7 +6,7 @@ spring:
   application:
     name: commerce-gateway-development
   datasource:
-    url: jdbc:postgresql://localhost:5432/commercegatewaydb
+    url: jdbc:postgresql://localhost:5432/${POSTGRES_DB}
     username: postgres
     password: 12345
     driver-class-name: org.postgresql.Driver
@@ -26,13 +26,13 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: qhuyddbmt123@gmail.com
-    password: lbyjpyzajcrjkmjz
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
     properties:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
       mail.smtp.ssl.trust: smtp.gmail.com
-    from: qhuyddbmt123@gmail.com
+    from: ${MAIL_FROM}
 
 management:
   endpoint:
