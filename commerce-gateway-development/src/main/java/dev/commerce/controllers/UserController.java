@@ -116,6 +116,18 @@ public class UserController {
         Users user = userService.findById(id);
         UserResponse response = usersMapper.toDto(user);
         return ResponseEntity.ok(response);
+    }
 
+    @Operation(summary = "Update my profile", description = "Update current authenticated user's profile")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Profile updated successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized access")
+    })
+    @PutMapping("/me")
+    public ResponseEntity<String> updateMyProfile(@Valid @RequestBody UserUpdateRequest request) {
+        UUID userId = utils.getCurrentUserId();
+        userService.updateUser(userId, request);
+        return ResponseEntity.ok("Profile updated successfully");
     }
 }
