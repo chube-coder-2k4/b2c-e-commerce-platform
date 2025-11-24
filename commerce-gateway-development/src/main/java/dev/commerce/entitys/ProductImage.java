@@ -21,7 +21,7 @@ public class ProductImage extends BaseEntity {
     private String publicId;
     @Column(name = "is_primary")
     private boolean primary = false;
-
+    @PrePersist
     public void ensureId() {
         if(id == null) this.id = UUID.randomUUID();
     }

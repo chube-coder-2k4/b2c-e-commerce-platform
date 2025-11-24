@@ -1,6 +1,7 @@
 package dev.commerce.services.impl;
 
 import com.cloudinary.Cloudinary;
+import com.cloudinary.Transformation;
 import com.cloudinary.utils.ObjectUtils;
 import dev.commerce.dtos.response.ProductImageResponse;
 import dev.commerce.entitys.Product;
@@ -58,10 +59,15 @@ public class ProductImageServiceImpl implements ProductImageService {
 
         Map<String, Object> uploadResult;
         try {
+//            uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap(
+//                    "folder", "products",
+//                    "resource_type", "image",
+//                    "transformation", ObjectUtils.asMap("quality", "auto")
+//            ));
             uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap(
                     "folder", "products",
                     "resource_type", "image",
-                    "transformation", ObjectUtils.asMap("quality", "auto")
+                    "transformation", new Transformation().quality("auto") // dùng Transformation object
             ));
         } catch (IOException e) {
             throw new RuntimeException("Failed to upload image to Cloudinary", e);

@@ -62,12 +62,12 @@ public class ProductServiceImpl implements ProductService {
         Product product = productMapper.toEntity(request);
         product.setCategory(category);
         product.setCreatedBy(utils.getCurrentUserId());
+        product.setActive(true);
         if(product.getSlug() == null || product.getSlug().isEmpty()){
             product.setSlug(slugify(product.getName()));
         }
         Product savedProduct = productRepository.save(product);
         return productMapper.toResponse(savedProduct);
-
     }
 
     @Override

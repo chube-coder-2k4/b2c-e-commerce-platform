@@ -19,7 +19,7 @@ public class ProductImageController {
 
     private final ProductImageService productImageService;
 
-    @PostMapping
+    @PostMapping(consumes = "multipart/form-data")
     @Operation(summary = "Upload product image")
     public ResponseEntity<ProductImageResponse> upload(
             @PathVariable UUID productId,
