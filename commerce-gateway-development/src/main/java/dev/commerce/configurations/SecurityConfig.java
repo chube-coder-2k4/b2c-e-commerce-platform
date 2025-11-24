@@ -37,12 +37,11 @@ public class SecurityConfig {
 
     // khai báo whitelist các endpoint ko cần xác thực ở đây nếu có
     private static final String[] AUTH_WHITELIST = {
-            "/auth/**",
+            "/api/v1/auth/**",
             "/v3/api-docs/**",
             "/swagger-ui/**",
-            "/swagger-ui.html"
-            ,
-            "/users/register"
+            "/swagger-ui.html",
+            "/api/v1/users/register"
     };
 
     @Bean

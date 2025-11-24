@@ -30,7 +30,7 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/users")
+@RequestMapping("/api/v1/users")
 @Tag(name = "User Management", description = "User management APIs")
 @Validated
 public class UserController {
