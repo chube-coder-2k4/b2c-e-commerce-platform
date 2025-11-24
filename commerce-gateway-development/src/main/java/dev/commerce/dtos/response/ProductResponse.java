@@ -1,17 +1,17 @@
 package dev.commerce.dtos.response;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class ProductResponse {
-    private UUID productId;
+    private UUID id;
     private String name;
     private String slug;
     private String description;
