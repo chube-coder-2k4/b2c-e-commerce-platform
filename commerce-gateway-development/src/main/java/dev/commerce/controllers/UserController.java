@@ -30,7 +30,7 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/users")
+@RequestMapping("/api/v1/users")
 @Tag(name = "User Management", description = "User management APIs")
 @Validated
 public class UserController {
@@ -66,7 +66,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUserWithFilter(request));
     }
 
-    @Operation(summary = "Update infor user", description = "Update user information by ID")
+    @Operation(summary = "Update user", description = "Update user information by ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User updated successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid input data"),

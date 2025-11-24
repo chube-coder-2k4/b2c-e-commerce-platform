@@ -27,14 +27,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping("/api/v1/auth")
 @Validated
 @Slf4j
 @Tag(name = "Authentication", description = "Authentication management APIs")
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final OtpVerifyService otpVerifyService;
-    private final UserService userService;
 
     @Operation(summary = "User login", description = "Authenticate user and return access token and refresh token")
     @ApiResponses(value = {
