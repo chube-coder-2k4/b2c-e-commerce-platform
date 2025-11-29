@@ -1,4 +1,4 @@
-package dev.commerce.services.security;
+package dev.commerce.services;
 
 import dev.commerce.dtos.request.ChangePasswordRequest;
 import dev.commerce.dtos.request.LoginRequest;

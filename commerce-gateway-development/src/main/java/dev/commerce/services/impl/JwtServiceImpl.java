@@ -1,8 +1,8 @@
-package dev.commerce.services.security.impl;
+package dev.commerce.services.impl;
 
 import dev.commerce.dtos.common.TokenType;
 import dev.commerce.entitys.Users;
-import dev.commerce.services.security.JwtService;
+import dev.commerce.services.JwtService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

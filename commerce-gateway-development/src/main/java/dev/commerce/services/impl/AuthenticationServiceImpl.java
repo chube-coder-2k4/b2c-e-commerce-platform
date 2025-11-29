@@ -1,4 +1,4 @@
-package dev.commerce.services.security.impl;
+package dev.commerce.services.impl;
 
 import dev.commerce.dtos.common.TokenType;
 import dev.commerce.dtos.request.ChangePasswordRequest;
@@ -11,8 +11,8 @@ import dev.commerce.exception.UserNotFoundException;
 import dev.commerce.redis.RefreshToken;
 import dev.commerce.repositories.jpa.UserRepository;
 import dev.commerce.services.RefreshTokenService;
-import dev.commerce.services.security.AuthenticationService;
-import dev.commerce.services.security.JwtService;
+import dev.commerce.services.AuthenticationService;
+import dev.commerce.services.JwtService;
 import dev.commerce.utils.AuthenticationUtils;
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.HttpServletRequest;

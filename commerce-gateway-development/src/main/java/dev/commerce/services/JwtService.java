@@ -1,4 +1,4 @@
-package dev.commerce.services.security;
+package dev.commerce.services;
 
 import dev.commerce.dtos.common.TokenType;
 import org.springframework.security.core.userdetails.UserDetails;
