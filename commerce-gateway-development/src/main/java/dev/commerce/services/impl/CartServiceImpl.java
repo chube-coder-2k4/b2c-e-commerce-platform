@@ -93,11 +93,19 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartResponse getMyCart() {
-        return null;
+        Users user = utils.getCurrentUser();
+        Cart cart = cartRepository.findByUsers(user)
+                .orElseThrow(() -> new RuntimeException("Cart not found for user"));
+        return cartMapper.toResponse(cart);
     }
 
     @Override
     public void clearCart() {
-
+        Users user = utils.getCurrentUser();
+        Cart cart = cartRepository.findByUsers(user)
+                .orElseThrow(() -> new RuntimeException("Cart not found for user"));
+        cartItemRepository.deleteByCartId(cart.getId());
+        cart.setTotalPrice(0.0);
+        cartRepository.save(cart);
     }
 }
