@@ -1,156 +1,76 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thanh toán thất bại</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-        .container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            padding: 50px;
-            text-align: center;
-            max-width: 500px;
-            width: 100%;
-            animation: slideUp 0.5s ease-out;
-        }
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .error-icon {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: #ef4444;
-            margin: 0 auto 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: scaleIn 0.5s ease-out 0.2s both;
-        }
-        @keyframes scaleIn {
-            from {
-                transform: scale(0);
-            }
-            to {
-                transform: scale(1);
-            }
-        }
-        .error-icon svg {
-            width: 60px;
-            height: 60px;
-            stroke: white;
-            stroke-width: 3;
-            fill: none;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-        h1 {
-            color: #1f2937;
-            font-size: 32px;
-            margin-bottom: 15px;
-        }
-        .message {
-            color: #6b7280;
-            font-size: 16px;
-            margin-bottom: 30px;
-            line-height: 1.6;
-        }
-        .error-info {
-            background: #fef2f2;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            border-left: 4px solid #ef4444;
-        }
-        .error-info p {
-            margin: 10px 0;
-            color: #374151;
-        }
-        .error-info strong {
-            color: #1f2937;
-        }
-        .btn {
-            display: inline-block;
-            padding: 15px 40px;
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: 600;
-            transition: transform 0.2s, box-shadow 0.2s;
-            margin: 5px;
-        }
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(245, 87, 108, 0.4);
-        }
-        .btn-secondary {
-            background: #6b7280;
+            font-family: 'Inter', sans-serif;
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <div class="error-icon">
-            <svg viewBox="0 0 24 24">
-                <path d="M6 18L18 6M6 6l12 12"/>
-            </svg>
+<body class="bg-slate-50 dark:bg-slate-900 flex items-center justify-center min-h-screen">
+    <div class="w-full max-w-md mx-auto">
+        <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-lg p-8 text-center">
+            <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/50 mb-6">
+                <svg class="h-8 w-8 text-red-600 dark:text-red-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </div>
+            <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-50 mb-2">Thanh toán thất bại!</h1>
+            <p class="text-slate-600 dark:text-slate-400 mb-6">
+                Rất tiếc, giao dịch của bạn không thành công. Vui lòng thử lại hoặc liên hệ hỗ trợ.
+            </p>
+            <div class="bg-red-50 dark:bg-red-900/30 border-l-4 border-red-500 rounded-lg p-4 text-left mb-8">
+                <div class="flex justify-between items-center py-2 border-b border-red-200 dark:border-red-800">
+                    <span class="text-sm text-red-700 dark:text-red-300">Mã đơn hàng</span>
+                    <span id="orderId" class="text-sm font-medium text-red-900 dark:text-red-200">Đang tải...</span>
+                </div>
+                <div class="flex justify-between items-center pt-2">
+                    <span class="text-sm text-red-700 dark:text-red-300">Lý do</span>
+                    <span id="errorMsg" class="text-sm font-medium text-red-900 dark:text-red-200">Không xác định</span>
+                </div>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-3">
+                <a href="#" onclick="retryPayment(event)" class="w-full inline-flex justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90 h-10 px-4 py-2">
+                    Thử lại thanh toán
+                </a>
+                <a href="/" class="w-full inline-flex justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90 h-10 px-4 py-2">
+                    Quay về trang chủ
+                </a>
+            </div>
         </div>
-        <h1>Thanh toán thất bại!</h1>
-        <p class="message">
-            Rất tiếc, giao dịch của bạn không thành công. Vui lòng thử lại hoặc liên hệ hỗ trợ.
-        </p>
-        <div class="error-info">
-            <p><strong>Mã đơn hàng:</strong> <span id="orderId">Đang tải...</span></p>
-            <p><strong>Trạng thái:</strong> <span style="color: #ef4444;">Thanh toán thất bại</span></p>
-            <p id="errorMsg" style="margin-top: 15px; font-size: 14px;"></p>
-        </div>
-        <a href="#" onclick="retryPayment()" class="btn">Thử lại</a>
-        <a href="/api/v1/order/user" class="btn btn-secondary">Xem đơn hàng</a>
     </div>
 
     <script>
-        // Lấy thông tin từ URL query parameter
         const urlParams = new URLSearchParams(window.location.search);
-        const orderId = urlParams.get('orderId');
-        const error = urlParams.get('error');
+        const orderIdFromUrl = urlParams.get('orderId');
+        const errorFromUrl = urlParams.get('error');
 
-        if (orderId) {
-            document.getElementById('orderId').textContent = orderId;
+        if (orderIdFromUrl) {
+            const orderCode = 'ORD-' + orderIdFromUrl.substring(0, 8).toUpperCase();
+            document.getElementById('orderId').textContent = orderCode;
         }
 
-        if (error) {
-            document.getElementById('errorMsg').innerHTML =
-                '<strong>Lý do:</strong> ' + decodeURIComponent(error);
-        }
-
-        function retryPayment() {
-            if (orderId) {
-                window.location.href = '/api/v1/payments/create/' + orderId;
+        if (errorFromUrl) {
+            let decodedError = decodeURIComponent(errorFromUrl);
+            if (decodedError === 'Invalid payment signature') {
+                document.getElementById('errorMsg').textContent = 'Chữ ký không hợp lệ';
             } else {
+                document.getElementById('errorMsg').textContent = decodedError;
+            }
+        }
+
+        function retryPayment(event) {
+            event.preventDefault();
+            if (orderIdFromUrl) {
+                // Chuyển hướng người dùng đến trang tạo lại URL thanh toán
+                window.location.href = '/api/v1/payments/create/' + orderIdFromUrl;
+            } else {
+                // Nếu không có orderId, quay về trang chủ
                 window.location.href = '/';
             }
         }

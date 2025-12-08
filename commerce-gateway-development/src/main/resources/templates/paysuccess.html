@@ -1,138 +1,60 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thanh toán thành công</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-        .container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            padding: 50px;
-            text-align: center;
-            max-width: 500px;
-            width: 100%;
-            animation: slideUp 0.5s ease-out;
-        }
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .success-icon {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: #10b981;
-            margin: 0 auto 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: scaleIn 0.5s ease-out 0.2s both;
-        }
-        @keyframes scaleIn {
-            from {
-                transform: scale(0);
-            }
-            to {
-                transform: scale(1);
-            }
-        }
-        .success-icon svg {
-            width: 60px;
-            height: 60px;
-            stroke: white;
-            stroke-width: 3;
-            fill: none;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-        h1 {
-            color: #1f2937;
-            font-size: 32px;
-            margin-bottom: 15px;
-        }
-        .message {
-            color: #6b7280;
-            font-size: 16px;
-            margin-bottom: 30px;
-            line-height: 1.6;
-        }
-        .order-info {
-            background: #f3f4f6;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-        }
-        .order-info p {
-            margin: 10px 0;
-            color: #374151;
-        }
-        .order-info strong {
-            color: #1f2937;
-        }
-        .btn {
-            display: inline-block;
-            padding: 15px 40px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: 600;
-            transition: transform 0.2s, box-shadow 0.2s;
-            margin: 5px;
-        }
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+            font-family: 'Inter', sans-serif;
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <div class="success-icon">
-            <svg viewBox="0 0 24 24">
-                <path d="M5 13l4 4L19 7"/>
-            </svg>
+<body class="bg-slate-50 dark:bg-slate-900 flex items-center justify-center min-h-screen">
+    <div class="w-full max-w-md mx-auto">
+        <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-lg p-8 text-center">
+            <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/50 mb-6">
+                <svg class="h-8 w-8 text-green-600 dark:text-green-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+            <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-50 mb-2">Thanh toán thành công!</h1>
+            <p class="text-slate-600 dark:text-slate-400 mb-6">
+                Cảm ơn bạn đã đặt hàng. Đơn hàng của bạn đã được xác nhận và đang được xử lý.
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-700/50 rounded-lg p-4 text-left mb-8">
+                <div class="flex justify-between items-center py-2 border-b border-slate-200 dark:border-slate-600">
+                    <span class="text-sm text-slate-500 dark:text-slate-400">Mã đơn hàng</span>
+                    <span id="orderId" class="text-sm font-medium text-slate-900 dark:text-slate-200">Đang tải...</span>
+                </div>
+                <div class="flex justify-between items-center py-2">
+                    <span class="text-sm text-slate-500 dark:text-slate-400">Trạng thái</span>
+                    <span class="inline-flex items-center rounded-md bg-green-50 dark:bg-green-900/50 px-2 py-1 text-xs font-medium text-green-700 dark:text-green-300 ring-1 ring-inset ring-green-600/20 dark:ring-green-500/30">
+                        Đã thanh toán
+                    </span>
+                </div>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-3">
+                <a href="/" class="w-full inline-flex justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90 h-10 px-4 py-2">
+                    Tiếp tục mua sắm
+                </a>
+                <a href="/api/v1/order/user" class="w-full inline-flex justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90 h-10 px-4 py-2">
+                    Xem lịch sử đơn hàng
+                </a>
+            </div>
         </div>
-        <h1>Thanh toán thành công!</h1>
-        <p class="message">
-            Cảm ơn bạn đã đặt hàng. Đơn hàng của bạn đã được xác nhận và đang được xử lý.
-        </p>
-        <div class="order-info">
-            <p><strong>Mã đơn hàng:</strong> <span id="orderId">Đang tải...</span></p>
-            <p><strong>Trạng thái:</strong> <span style="color: #10b981;">Đã thanh toán</span></p>
-        </div>
-        <a href="/api/v1/order/user" class="btn">Xem đơn hàng</a>
-        <a href="/" class="btn" style="background: #6b7280;">Tiếp tục mua sắm</a>
     </div>
 
     <script>
-        // Lấy orderId từ URL query parameter
         const urlParams = new URLSearchParams(window.location.search);
-        const orderId = urlParams.get('orderId');
-        if (orderId) {
-            document.getElementById('orderId').textContent = orderId;
+        const orderIdFromUrl = urlParams.get('orderId');
+        if (orderIdFromUrl) {
+            // Lấy order code từ orderId (UUID)
+            // Ví dụ: 884faa60-fad2-400c-90f4-8c101affd77e -> ORD-884FAA60
+            const orderCode = 'ORD-' + orderIdFromUrl.substring(0, 8).toUpperCase();
+            document.getElementById('orderId').textContent = orderCode;
         }
     </script>
 </body>
