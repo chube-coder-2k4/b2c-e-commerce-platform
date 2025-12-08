@@ -1,14 +1,17 @@
 package dev.commerce.utils;
 
 import dev.commerce.configurations.VNPayConfig;
+import lombok.extern.slf4j.Slf4j;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+@Slf4j
 public class VNPayUtil {
 
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
@@ -23,18 +26,29 @@ public class VNPayUtil {
         params.put("vnp_Amount", String.valueOf(vnpAmount));
         params.put("vnp_CurrCode", "VND");
         params.put("vnp_TxnRef", paymentId.toString());
-        params.put("vnp_OrderInfo", "Thanh toán đơn hàng " + paymentId);
+        params.put("vnp_OrderInfo", "Thanh toan don hang:" + paymentId.toString().substring(0, 8)); // Giống VNPayController mẫu
         params.put("vnp_OrderType", "other");
         params.put("vnp_Locale", "vn");
         params.put("vnp_ReturnUrl", config.getReturnUrl());
         params.put("vnp_IpAddr", "127.0.0.1");
-        params.put("vnp_CreateDate", DATE_FORMAT.format(LocalDateTime.now()));
-        params.put("vnp_IpnUrl", config.getIpnUrl());
+
+        Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+        params.put("vnp_CreateDate", formatter.format(cld.getTime()));
+
+        cld.add(Calendar.MINUTE, 15);
+        params.put("vnp_ExpireDate", formatter.format(cld.getTime())); // THÊM ExpireDate!
+
+        String hashData = buildHashData(params);
+        String secureHash = hmacSHA512(config.getHashSecret(), hashData);
+
+        log.info("=== VNPAY SIGNATURE DEBUG ===");
+        log.info("Hash Secret: {}", config.getHashSecret());
+        log.info("Hash Data: {}", hashData);
+        log.info("Secure Hash (SHA512): {}", secureHash);
+        log.info("============================");
 
         String query = buildQuery(params);
-        String hashData = buildHashData(params);
-
-        String secureHash = hmacSHA256(config.getHashSecret(), hashData);
 
         return config.getUrl() + "?" + query + "&vnp_SecureHash=" + secureHash;
     }
@@ -57,36 +71,36 @@ public class VNPayUtil {
         return calculated.equalsIgnoreCase(secureHash);
     }
 
-    /** Build query string with URL encoding */
-    private static String buildQuery(Map<String, String> params) {
+    /** Build query string - NO URL ENCODING (VNPay không yêu cầu encode) */
+    public static String buildQuery(Map<String, String> params) {
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<String, String> e : params.entrySet()) {
-            sb.append(URLEncoder.encode(e.getKey(), StandardCharsets.UTF_8));
+            sb.append(e.getKey());
             sb.append("=");
-            sb.append(URLEncoder.encode(e.getValue(), StandardCharsets.UTF_8));
+            sb.append(e.getValue());
             sb.append("&");
         }
         sb.deleteCharAt(sb.length() - 1);
         return sb.toString();
     }
 
-    /** Build hash data (raw data) */
-    private static String buildHashData(Map<String, String> params) {
+    /** Build hash data (raw data) - NO URL ENCODING for VNPay signature */
+    public static String buildHashData(Map<String, String> params) {
         StringBuilder sb = new StringBuilder();
         Iterator<Map.Entry<String, String>> iterator = params.entrySet().iterator();
 
         while (iterator.hasNext()) {
             Map.Entry<String, String> entry = iterator.next();
-            sb.append(URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8));
+            sb.append(entry.getKey());
             sb.append("=");
-            sb.append(URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8));
+            sb.append(entry.getValue());
             if (iterator.hasNext()) sb.append("&");
         }
         return sb.toString();
     }
 
     /** SHA256 HMAC */
-    private static String hmacSHA256(String secretKey, String data) {
+    public static String hmacSHA256(String secretKey, String data) {
         try {
             Mac hmac = Mac.getInstance("HmacSHA256");
             SecretKeySpec keySpec =
@@ -102,7 +116,7 @@ public class VNPayUtil {
     /** Convert byte[] → Hex */
     private static String bytesToHex(byte[] bytes) {
         StringBuilder sb = new StringBuilder();
-        for (byte b : bytes) sb.append(String.format("%02X", b));
+        for (byte b : bytes) sb.append(String.format("%02x", b)); // chữ thường
         return sb.toString();
     }
 

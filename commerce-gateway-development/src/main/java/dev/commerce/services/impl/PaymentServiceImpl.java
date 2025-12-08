@@ -16,15 +16,16 @@ import dev.commerce.services.PaymentService;
 import dev.commerce.utils.AuthenticationUtils;
 import dev.commerce.utils.VNPayUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository paymentRepository;
     private final OrderRepository orderRepository;
@@ -36,60 +37,41 @@ public class PaymentServiceImpl implements PaymentService {
     @Transactional
     public PaymentUrlResponse createPaymentUrl(UUID orderId) {
         Users user = utils.getCurrentUser();
-        Orders orders = orderRepository.findById(orderId)
-                .orElseThrow(() -> new ResourceNotFoundException("Orders not found"));
+        Orders order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
 
-        // Kiểm tra orders thuộc về user hiện tại
-        if (!orders.getUsers().getId().equals(user.getId())) {
-            throw new IllegalArgumentException("You are not authorized to pay for this orders");
+        // Kiểm tra order thuộc về user hiện tại
+        if (!order.getUsers().getId().equals(user.getId())) {
+            throw new IllegalArgumentException("You are not authorized to pay for this order");
         }
 
-        // Kiểm tra trạng thái orders
-        if (orders.getStatus() != OrderStatus.PENDING) {
-            throw new IllegalArgumentException("Orders is not in pending status");
+        // Kiểm tra trạng thái order
+        if (order.getStatus() != OrderStatus.PENDING) {
+            throw new IllegalArgumentException("Order is not in pending status");
         }
 
         // Tạo payment record
         Payment payment = Payment.builder()
-                .orders(orders)
-                .provider(orders.getPaymentMethod())
-                .amount(orders.getTotalAmount())
+                .orders(order)
+                .provider(order.getPaymentMethod())
+                .amount(order.getTotalAmount())
                 .status(PaymentStatus.PENDING)
                 .build();
         payment.setCreatedBy(user.getId());
         paymentRepository.save(payment);
 
-        // Tạo VNPay URL
-        String vnp_TxnRef = payment.getId().toString();
+        // Tạo VNPay URL - SỬ DỤNG buildPaymentUrl từ VNPayUtil
+        String paymentUrl = VNPayUtil.buildPaymentUrl(payment.getId(), order.getTotalAmount(), vnPayConfig);
 
-        Map<String, String> vnp_Params = new HashMap<>();
-        vnp_Params.put("vnp_Version", "2.1.0");
-        vnp_Params.put("vnp_Command", "pay");
-        vnp_Params.put("vnp_TmnCode", vnPayConfig.getTmnCode());
-        vnp_Params.put("vnp_Amount", String.valueOf((long)(orders.getTotalAmount() * 100)));
-        vnp_Params.put("vnp_CurrCode", "VND");
-        vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
-        vnp_Params.put("vnp_OrderInfo", "Thanh toan don hang: " + orders.getOrderCode());
-        vnp_Params.put("vnp_OrderType", "other");
-        vnp_Params.put("vnp_Locale", "vn");
-        vnp_Params.put("vnp_ReturnUrl", vnPayConfig.getReturnUrl());
-        vnp_Params.put("vnp_IpAddr", "127.0.0.1");
-
-        Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
-        vnp_Params.put("vnp_CreateDate", formatter.format(cld.getTime()));
-
-        cld.add(Calendar.MINUTE, 15);
-        vnp_Params.put("vnp_ExpireDate", formatter.format(cld.getTime()));
-
-        String queryUrl = VNPayUtil.hashAllFields(vnp_Params);
-        String vnp_SecureHash = VNPayUtil.hmacSHA512(vnPayConfig.getHashSecret(), queryUrl);
-        queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
-        String paymentUrl = vnPayConfig.getUrl() + "?" + queryUrl;
+        log.info("=== VNPAY PAYMENT URL DEBUG ===");
+        log.info("Payment ID: {}", payment.getId());
+        log.info("Amount: {}", order.getTotalAmount());
+        log.info("Payment URL: {}", paymentUrl);
+        log.info("===============================");
 
         return new PaymentUrlResponse(
                 paymentUrl,
-                orders.getOrderCode(),
+                order.getOrderCode(),
                 user.getId(),
                 user.getId()
         );
@@ -99,13 +81,17 @@ public class PaymentServiceImpl implements PaymentService {
     @Transactional
     public PaymentResponse handlePaymentCallback(Map<String, String> vnpParams) {
         String vnp_SecureHash = vnpParams.get("vnp_SecureHash");
-        vnpParams.remove("vnp_SecureHashType");
-        vnpParams.remove("vnp_SecureHash");
 
-        // Verify signature
-        String signValue = VNPayUtil.hmacSHA512(vnPayConfig.getHashSecret(), VNPayUtil.hashAllFields(vnpParams));
+        // Remove hash fields before verifying
+        Map<String, String> paramsToVerify = new TreeMap<>(vnpParams);
+        paramsToVerify.remove("vnp_SecureHash");
+        paramsToVerify.remove("vnp_SecureHashType");
 
-        if (!signValue.equals(vnp_SecureHash)) {
+        // Verify signature using SHA512 (not SHA256!)
+        String hashData = VNPayUtil.buildHashData(paramsToVerify);
+        String signValue = VNPayUtil.hmacSHA512(vnPayConfig.getHashSecret(), hashData);
+
+        if (!signValue.equalsIgnoreCase(vnp_SecureHash)) {
             throw new IllegalArgumentException("Invalid payment signature");
         }
 
@@ -116,7 +102,7 @@ public class PaymentServiceImpl implements PaymentService {
         String responseCode = vnpParams.get("vnp_ResponseCode");
         String transactionNo = vnpParams.get("vnp_TransactionNo");
 
-        Orders orders = payment.getOrders();
+        Orders order = payment.getOrders();
 
         if ("00".equals(responseCode)) {
             // Thanh toán thành công
@@ -124,16 +110,16 @@ public class PaymentServiceImpl implements PaymentService {
             payment.setTransactionId(transactionNo);
             payment.setPaidAt(LocalDateTime.now());
 
-            orders.setStatus(OrderStatus.PAID);
-            orders.setPaidAt(LocalDateTime.now());
+            order.setStatus(OrderStatus.PAID);
+            order.setPaidAt(LocalDateTime.now());
         } else {
             // Thanh toán thất bại
             payment.setStatus(PaymentStatus.FAILED);
-            orders.setStatus(OrderStatus.PAYMENT_FAILED);
+            order.setStatus(OrderStatus.PAYMENT_FAILED);
         }
 
         paymentRepository.save(payment);
-        orderRepository.save(orders);
+        orderRepository.save(order);
 
         return paymentMapper.toResponse(payment);
     }
