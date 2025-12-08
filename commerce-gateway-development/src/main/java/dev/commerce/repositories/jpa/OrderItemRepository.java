@@ -1,6 +1,6 @@
 package dev.commerce.repositories.jpa;
 
-import dev.commerce.entitys.Order;
+import dev.commerce.entitys.Orders;
 import dev.commerce.entitys.OrderItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -11,6 +11,6 @@ import java.util.UUID;
 
 @Repository
 public interface OrderItemRepository extends JpaRepository<OrderItem, UUID>, JpaSpecificationExecutor<OrderItem> {
-    //find By Order
-    List<OrderItem> findByOrder(Order order);
+    //find By Orders
+    List<OrderItem> findByOrders(Orders orders);
 }

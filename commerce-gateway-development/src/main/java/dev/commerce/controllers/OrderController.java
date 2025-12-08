@@ -23,14 +23,14 @@ import java.util.UUID;
 @RequestMapping("/api/v1/order")
 @Validated
 @Slf4j
-@Tag(name = "Order Controller", description = "APIs for managing orders")
+@Tag(name = "Orders Controller", description = "APIs for managing orders")
 public class OrderController {
     private final OrderService orderService;
 
-    @Operation(summary = "Create a new order", description = "Creates a new order for the authenticated user based on their cart contents.")
+    @Operation(summary = "Create a new orders", description = "Creates a new orders for the authenticated user based on their cart contents.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Order created successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid order request"),
+            @ApiResponse(responseCode = "200", description = "Orders created successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid orders request"),
             @ApiResponse(responseCode = "404", description = "Cart not found or is empty")
     })
     @PostMapping()
@@ -45,7 +45,7 @@ public class OrderController {
             @ApiResponse(responseCode = "401", description = "Unauthorized access")
     })
     @GetMapping("/user")
-    public ResponseEntity<List<OrderResponse>> getUserOrders() {
+    public ResponseEntity<List<OrderDetailResponse>> getUserOrders() {
         return ResponseEntity.ok(orderService.getUserOrders());
     }
 
@@ -57,14 +57,14 @@ public class OrderController {
             @ApiResponse(responseCode = "403", description = "Forbidden access")
     })
     @GetMapping("/all")
-    public ResponseEntity<List<OrderDetailResponse>> getAllOrders() {
+    public ResponseEntity<List<OrderResponse>> getAllOrders() {
         return ResponseEntity.ok(orderService.getAllOrders());
     }
 
-    @Operation(summary = "Get order details", description = "Retrieves detailed information about a specific order by its ID.")
+    @Operation(summary = "Get orders details", description = "Retrieves detailed information about a specific orders by its ID.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Order details retrieved successfully"),
-            @ApiResponse(responseCode = "404", description = "Order not found")
+            @ApiResponse(responseCode = "200", description = "Orders details retrieved successfully"),
+            @ApiResponse(responseCode = "404", description = "Orders not found")
     })
     @GetMapping("/{orderId}")
     public ResponseEntity<OrderDetailResponse> getOrderDetails(@PathVariable("orderId") UUID orderId) {
@@ -72,10 +72,10 @@ public class OrderController {
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "Update order status", description = "Updates the status of a specific order. Admin access required.")
+    @Operation(summary = "Update orders status", description = "Updates the status of a specific orders. Admin access required.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Order status updated successfully"),
-            @ApiResponse(responseCode = "404", description = "Order not found"),
+            @ApiResponse(responseCode = "200", description = "Orders status updated successfully"),
+            @ApiResponse(responseCode = "404", description = "Orders not found"),
             @ApiResponse(responseCode = "403", description = "Forbidden access")
     })
     @PutMapping("/{orderId}/status")
@@ -84,10 +84,10 @@ public class OrderController {
         return ResponseEntity.ok(orderService.updateStatus(orderId, status));
     }
 
-    @Operation(summary = "Cancel an order", description = "Cancels a specific order by its ID.")
+    @Operation(summary = "Cancel an orders", description = "Cancels a specific orders by its ID.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Order canceled successfully"),
-            @ApiResponse(responseCode = "404", description = "Order not found")
+            @ApiResponse(responseCode = "200", description = "Orders canceled successfully"),
+            @ApiResponse(responseCode = "404", description = "Orders not found")
     })
     @PutMapping("/{orderId}/cancel")
     public ResponseEntity<OrderResponse> cancelOrder(@PathVariable("orderId") UUID orderId) {

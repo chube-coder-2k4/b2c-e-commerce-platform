@@ -14,7 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Order extends BaseEntity{
+public class Orders extends BaseEntity{
     @Id
     private UUID id;
     @ManyToOne(fetch = FetchType.LAZY)

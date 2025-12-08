@@ -16,7 +16,7 @@ public class OrderItem extends BaseEntity{
     private UUID id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
-    private Order order;
+    private Orders orders;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;

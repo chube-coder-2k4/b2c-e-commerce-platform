@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(value = "user_list", allEntries = true)
+    @CacheEvict(value = "user_list", allEntries = true) // allEntries true to clear all cached user lists
     public UUID saveUser(UserRequest request) {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new InvalidDataException("Email already exists");

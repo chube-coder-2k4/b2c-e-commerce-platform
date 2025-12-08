@@ -19,7 +19,8 @@ public class Payment extends BaseEntity{
     private UUID id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
-    private Order order;
+    private Orders orders;
+    @Enumerated(EnumType.STRING)
     private PaymentMethod provider;
     private double amount;
     private String transactionId;

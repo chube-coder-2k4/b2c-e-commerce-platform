@@ -14,7 +14,6 @@ import dev.commerce.utils.AuthenticationUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,19 +36,19 @@ public class OrderServiceImpl implements OrderService {
         if(cartItems.isEmpty()) {
             throw new ResourceNotFoundException("Cart is Empty");
         }
-        Order order = new Order();
-        order.setUsers(user);
-        order.setOrderCode("ORD-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
-        order.setStatus(OrderStatus.PENDING);
-        order.setTotalAmount(cart.getTotalPrice());
-        order.setPaymentMethod(orderRequest.getPaymentMethod() != null ? orderRequest.getPaymentMethod() : PaymentMethod.COD);
-        order.setShippingAddress(orderRequest.getShippingAddress() != null ? orderRequest.getShippingAddress() : user.getAddress());
-        order.setPaidAt(LocalDateTime.now());
-        orderRepository.save(order);
+        Orders orders = new Orders();
+        orders.setUsers(user);
+        orders.setOrderCode("ORD-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
+        orders.setStatus(OrderStatus.PENDING);
+        orders.setTotalAmount(cart.getTotalPrice());
+        orders.setPaymentMethod(orderRequest.getPaymentMethod() != null ? orderRequest.getPaymentMethod() : PaymentMethod.COD);
+        orders.setShippingAddress(orderRequest.getShippingAddress() != null ? orderRequest.getShippingAddress() : user.getAddress());
+        // Không set paidAt ở đây - chỉ set khi thanh toán thành công
+        orderRepository.save(orders);
 
         List<OrderItem> orderItem = cartItems.stream().map(ci -> {
             OrderItem item = new OrderItem();
-            item.setOrder(order);
+            item.setOrders(orders);
             item.setProduct(ci.getProduct());
             item.setQuantity(ci.getQuantity());
             item.setUnitPrice(ci.getPrice());
@@ -59,51 +58,51 @@ public class OrderServiceImpl implements OrderService {
         cart.setTotalPrice(0.0);
         cartRepository.save(cart);
 
-        return orderMapper.toOrderDetailResponse(order,orderItem);
+        return orderMapper.toOrderDetailResponse(orders,orderItem);
     }
 
     @Override
     public List<OrderDetailResponse> getUserOrders() {
         Users user = utils.getCurrentUser();
         return orderRepository.findByUsers(user).stream().map(order -> {
-            List<OrderItem> orderItems = orderItemRepository.findByOrder(order);
+            List<OrderItem> orderItems = orderItemRepository.findByOrders(order);
             return orderMapper.toOrderDetailResponse(order, orderItems);
         }).toList();
     }
 
     @Override
     public List<OrderResponse> getAllOrders() {
-        List<Order> orders = orderRepository.findAll();
+        List<Orders> orders = orderRepository.findAll();
         return orders.stream().map(orderMapper::toOrderResponse).toList();
     }
 
     @Override
     public OrderResponse updateStatus(UUID orderId, OrderStatus status) {
-        Order order = getOrderById(orderId);
-        order.setStatus(status);
-        orderRepository.save(order);
-        return orderMapper.toOrderResponse(order);
+        Orders orders = getOrderById(orderId);
+        orders.setStatus(status);
+        orderRepository.save(orders);
+        return orderMapper.toOrderResponse(orders);
     }
 
     @Override
     public OrderResponse cancelOrder(UUID orderId) {
-        Order order = getOrderById(orderId);
-        order.setStatus(OrderStatus.CANCELED);
-        orderRepository.save(order);
-        return orderMapper.toOrderResponse(order);
+        Orders orders = getOrderById(orderId);
+        orders.setStatus(OrderStatus.CANCELLED);
+        orderRepository.save(orders);
+        return orderMapper.toOrderResponse(orders);
 
     }
 
     @Override
     public OrderDetailResponse getOrderDetails(UUID orderId) {
-        Order order = getOrderById(orderId);
-        List<OrderItem> orderItems = orderItemRepository.findByOrder(order);
-        return orderMapper.toOrderDetailResponse(order, orderItems);
+        Orders orders = getOrderById(orderId);
+        List<OrderItem> orderItems = orderItemRepository.findByOrders(orders);
+        return orderMapper.toOrderDetailResponse(orders, orderItems);
     }
 
-    private Order getOrderById(UUID orderId) {
+    private Orders getOrderById(UUID orderId) {
         return orderRepository.findById(orderId)
-                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Orders not found"));
     }
 
 }

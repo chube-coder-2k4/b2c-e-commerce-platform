@@ -3,7 +3,7 @@ package dev.commerce.mappers;
 import dev.commerce.dtos.response.OrderDetailResponse;
 import dev.commerce.dtos.response.OrderItemResponse;
 import dev.commerce.dtos.response.OrderResponse;
-import dev.commerce.entitys.Order;
+import dev.commerce.entitys.Orders;
 import dev.commerce.entitys.OrderItem;
 import org.mapstruct.Mapper;
 
@@ -31,33 +31,33 @@ public interface OrderMapper {
                 .toList();
     }
 
-    // Order -> OrderResponse
-    default OrderResponse toOrderResponse(Order order) {
+    // Orders -> OrderResponse
+    default OrderResponse toOrderResponse(Orders orders) {
         return OrderResponse.builder()
-                .id(order.getId())
-                .orderCode(order.getOrderCode())
-                .totalAmount(order.getTotalAmount())
-                .status(order.getStatus().name())
-                .usersId(order.getUsers().getId())
-                .createdAt(order.getCreatedAt())
-                .updatedAt(order.getUpdatedAt())
+                .id(orders.getId())
+                .orderCode(orders.getOrderCode())
+                .totalAmount(orders.getTotalAmount())
+                .status(orders.getStatus().name())
+                .usersId(orders.getUsers().getId())
+                .createdAt(orders.getCreatedAt())
+                .updatedAt(orders.getUpdatedAt())
                 .build();
     }
 
-    // Order + List<OrderItem> -> OrderDetailResponse (detailed)
-    default OrderDetailResponse toOrderDetailResponse(Order order, List<OrderItem> items) {
+    // Orders + List<OrderItem> -> OrderDetailResponse (detailed)
+    default OrderDetailResponse toOrderDetailResponse(Orders orders, List<OrderItem> items) {
         return new OrderDetailResponse(
-                order.getId(),
-                order.getOrderCode(),
-                order.getTotalAmount(),
-                order.getStatus(),
-                order.getPaymentMethod(),
-                order.getShippingAddress(),
-                order.getCreatedAt(),
+                orders.getId(),
+                orders.getOrderCode(),
+                orders.getTotalAmount(),
+                orders.getStatus(),
+                orders.getPaymentMethod(),
+                orders.getShippingAddress(),
+                orders.getCreatedAt(),
                 toOrderItemResponses(items),
-                order.getUsers().getId(),
-                order.getCreatedBy(),
-                order.getUpdatedBy()
+                orders.getUsers().getId(),
+                orders.getCreatedBy(),
+                orders.getUpdatedBy()
         );
     }
 }
