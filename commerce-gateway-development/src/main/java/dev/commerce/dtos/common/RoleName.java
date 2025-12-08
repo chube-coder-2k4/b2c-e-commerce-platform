@@ -6,5 +6,4 @@ public enum RoleName {
     MANAGEMENT,
     SUPPORT,
     GUEST
-
 }

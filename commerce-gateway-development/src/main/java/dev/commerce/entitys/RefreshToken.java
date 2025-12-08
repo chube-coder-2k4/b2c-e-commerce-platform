@@ -2,7 +2,6 @@ package dev.commerce.entitys;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.redis.core.RedisHash;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

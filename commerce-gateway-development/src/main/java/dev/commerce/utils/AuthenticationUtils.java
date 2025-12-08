@@ -1,6 +1,5 @@
 package dev.commerce.utils;
 
-import com.sun.security.auth.UserPrincipal;
 import dev.commerce.entitys.Users;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

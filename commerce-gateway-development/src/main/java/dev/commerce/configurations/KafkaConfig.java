@@ -1,5 +1,8 @@
 package dev.commerce.configurations;
 
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
 public class KafkaConfig {
     // Kafka trong project này sẽ được config để gửi và nhận các message liên quan đến các sự kiện trong hệ thống thương mại điện tử, như tạo đơn hàng, cập nhật trạng thái đơn hàng, và xử lý thanh toán.
     // Cấu hình này sẽ bao gồm các thiết lập về producer, consumer, topic, và các tham số kết nối đến cluster Kafka.

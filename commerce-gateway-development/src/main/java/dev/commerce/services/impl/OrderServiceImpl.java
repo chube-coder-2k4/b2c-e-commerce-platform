@@ -43,7 +43,6 @@ public class OrderServiceImpl implements OrderService {
         orders.setTotalAmount(cart.getTotalPrice());
         orders.setPaymentMethod(orderRequest.getPaymentMethod() != null ? orderRequest.getPaymentMethod() : PaymentMethod.COD);
         orders.setShippingAddress(orderRequest.getShippingAddress() != null ? orderRequest.getShippingAddress() : user.getAddress());
-        // Không set paidAt ở đây - chỉ set khi thanh toán thành công
         orderRepository.save(orders);
 
         List<OrderItem> orderItem = cartItems.stream().map(ci -> {

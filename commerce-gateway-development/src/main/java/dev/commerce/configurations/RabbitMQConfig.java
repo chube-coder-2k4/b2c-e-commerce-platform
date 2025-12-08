@@ -1,5 +1,8 @@
 package dev.commerce.configurations;
 
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
 public class RabbitMQConfig {
     // RabbitMQConfig ở đây có tác dụng cấu hình các thành phần liên quan đến RabbitMQ trong ứng dụng Spring Boot.
     // Nó định nghĩa các bean cần thiết để kết nối và tương tác với RabbitMQ, bao gồm ConnectionFactory, RabbitTemplate, và các cấu hình khác như queues, exchanges, và bindings.

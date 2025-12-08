@@ -53,7 +53,7 @@ public class PaymentController {
         try {
             PaymentResponse paymentResponse = paymentService.handlePaymentCallback(vnpParams);
 
-            // Redirect dựa trên kết quả thanh toán
+            // Redirect dựa kết quả thanh toán
             if (paymentResponse.status().toString().equals("COMPLETED")) {
                 response.sendRedirect("/payment-success?orderId=" + paymentResponse.orderId());
             } else {

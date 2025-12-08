@@ -3,7 +3,6 @@ package dev.commerce.entitys;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity

@@ -3,11 +3,10 @@ package dev.commerce.controllers;
 import dev.commerce.configurations.VNPayConfig;
 import dev.commerce.utils.VNPayUtil;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -16,16 +15,16 @@ import java.util.TimeZone;
 
 @RestController
 @RequestMapping("/vnpay")
+@RequiredArgsConstructor
 public class VNPayController {
 
-    @Autowired
-    private VNPayConfig vnPayConfig;
+    private final VNPayConfig vnPayConfig;
 
     @PostMapping("/create-payment")
     public ResponseEntity<?> createPayment(@RequestParam Long amount,
                                            @RequestParam String bankCode,
                                            @RequestParam String language,
-                                           HttpServletRequest request) throws UnsupportedEncodingException {
+                                           HttpServletRequest request) {
 
         String vnp_TxnRef = String.valueOf(System.currentTimeMillis());
         String vnp_IpAddr = request.getRemoteAddr();
@@ -88,7 +87,7 @@ public class VNPayController {
 
         Map<String, String> response = new HashMap<>();
         if (signValue.equals(vnp_SecureHash)) {
-            // Xử lý logic cập nhật database
+            // Xử lý logic cập database
             response.put("RspCode", "00");
             response.put("Message", "Confirm Success");
         } else {

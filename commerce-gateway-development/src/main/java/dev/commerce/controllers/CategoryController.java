@@ -21,11 +21,6 @@ import java.util.UUID;
 @RequestMapping("/api/v1/categories")
 @Tag(name = "Category Controller", description = "APIs for managing product categories")
 public class CategoryController {
-    // void deleteCategoryById(UUID categoryId);
-    //    Page<CategoryResponse> getAllCategories(String name, int page, int size, String sortBy, String sortDir);
-    //    CategoryResponse getCategoryById(UUID categoryId);
-    //    CategoryResponse createCategory(CategoryRequest request);
-    //    CategoryResponse updateCategory(UUID categoryId, CategoryRequest request);
     private final CategoryService categoryService;
 
     @Operation(summary = "Get All Categories", description = "Retrieve all categories with optional filtering, pagination, and sorting")

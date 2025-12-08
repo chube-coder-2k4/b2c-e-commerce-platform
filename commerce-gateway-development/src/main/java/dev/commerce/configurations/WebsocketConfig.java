@@ -1,5 +1,8 @@
 package dev.commerce.configurations;
 
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
 public class WebsocketConfig {
     // class này sẽ chứa các cấu hình liên quan đến WebSocket trong ứng dụng Spring Boot
     // mục đích là để thiết lập các endpoint WebSocket, cấu hình message broker, và các thiết lập liên quan khác

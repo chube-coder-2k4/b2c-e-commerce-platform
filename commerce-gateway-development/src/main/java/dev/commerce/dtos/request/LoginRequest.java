@@ -1,6 +1,5 @@
 package dev.commerce.dtos.request;
 
-import dev.commerce.dtos.common.LoginType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;

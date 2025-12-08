@@ -1,7 +1,6 @@
 package dev.commerce.components;
 
 import dev.commerce.dtos.common.TokenType;
-import dev.commerce.services.UserService;
 import dev.commerce.services.impl.UserDetailServiceImpl;
 import dev.commerce.services.JwtService;
 import io.micrometer.common.util.StringUtils;
@@ -9,6 +8,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,12 +24,11 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @Slf4j
 public class Prefilter extends OncePerRequestFilter {
-    private final UserService userService;
     private final JwtService jwtService;
     private final UserDetailServiceImpl userDetailService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,@NonNull FilterChain filterChain) throws ServletException, IOException {
         log.info("------ PREFILTER ------");
 
         final String authorization = request.getHeader("Authorization");

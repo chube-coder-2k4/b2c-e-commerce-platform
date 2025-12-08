@@ -1,7 +1,6 @@
 package dev.commerce.services;
 
 import dev.commerce.dtos.response.CartResponse;
-import org.springframework.data.domain.Page;
 
 import java.util.UUID;
 
