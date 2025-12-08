@@ -779,7 +779,7 @@ npm run dev
 
 ### 6. **Real-time Features**
 - ✅ Notifications via WebSocket
-- ✅ Live order updates
+- ✅ Live orders updates
 - ✅ Stock updates
 
 ---
