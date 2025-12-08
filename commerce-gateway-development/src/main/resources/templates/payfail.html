@@ -1,10 +1,159 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh toán thất bại</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 50px;
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            animation: slideUp 0.5s ease-out;
+        }
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .error-icon {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: #ef4444;
+            margin: 0 auto 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: scaleIn 0.5s ease-out 0.2s both;
+        }
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+        .error-icon svg {
+            width: 60px;
+            height: 60px;
+            stroke: white;
+            stroke-width: 3;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        h1 {
+            color: #1f2937;
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+        .message {
+            color: #6b7280;
+            font-size: 16px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        .error-info {
+            background: #fef2f2;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #ef4444;
+        }
+        .error-info p {
+            margin: 10px 0;
+            color: #374151;
+        }
+        .error-info strong {
+            color: #1f2937;
+        }
+        .btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin: 5px;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(245, 87, 108, 0.4);
+        }
+        .btn-secondary {
+            background: #6b7280;
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <div class="error-icon">
+            <svg viewBox="0 0 24 24">
+                <path d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </div>
+        <h1>Thanh toán thất bại!</h1>
+        <p class="message">
+            Rất tiếc, giao dịch của bạn không thành công. Vui lòng thử lại hoặc liên hệ hỗ trợ.
+        </p>
+        <div class="error-info">
+            <p><strong>Mã đơn hàng:</strong> <span id="orderId">Đang tải...</span></p>
+            <p><strong>Trạng thái:</strong> <span style="color: #ef4444;">Thanh toán thất bại</span></p>
+            <p id="errorMsg" style="margin-top: 15px; font-size: 14px;"></p>
+        </div>
+        <a href="#" onclick="retryPayment()" class="btn">Thử lại</a>
+        <a href="/api/v1/order/user" class="btn btn-secondary">Xem đơn hàng</a>
+    </div>
 
+    <script>
+        // Lấy thông tin từ URL query parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderId = urlParams.get('orderId');
+        const error = urlParams.get('error');
+
+        if (orderId) {
+            document.getElementById('orderId').textContent = orderId;
+        }
+
+        if (error) {
+            document.getElementById('errorMsg').innerHTML =
+                '<strong>Lý do:</strong> ' + decodeURIComponent(error);
+        }
+
+        function retryPayment() {
+            if (orderId) {
+                window.location.href = '/api/v1/payments/create/' + orderId;
+            } else {
+                window.location.href = '/';
+            }
+        }
+    </script>
 </body>
 </html>
