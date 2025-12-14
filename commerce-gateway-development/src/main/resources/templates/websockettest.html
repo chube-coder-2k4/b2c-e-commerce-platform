@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>WS Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+</head>
+<body>
+<h3>WebSocket Backend Test</h3>
+
+<script>
+    const userId = "PASTE_USER_UUID_HERE"; // copy từ DB
+    const socket = new SockJS("http://localhost:8085/ws");
+    const stomp = Stomp.over(socket);
+
+    stomp.connect({}, function () {
+        console.log("✅ WS CONNECTED");
+
+        stomp.subscribe(
+            "/topic/order-status.ba8ba999-0379-41fb-bbf7-a2f3d2ce2c72",
+            function (msg) {
+                console.log(JSON.parse(msg.body));
+            }
+        );
+
+    });
+</script>
+</body>
+</html>
