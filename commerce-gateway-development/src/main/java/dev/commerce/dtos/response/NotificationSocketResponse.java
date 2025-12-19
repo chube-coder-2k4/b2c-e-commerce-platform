@@ -13,6 +13,5 @@ public class NotificationSocketResponse {
     private boolean read;
     private String type;
     private String referenceId;
-    private Instant createdAt;
 }
 
