@@ -14,6 +14,7 @@ import dev.commerce.services.RefreshTokenService;
 import dev.commerce.services.AuthenticationService;
 import dev.commerce.services.JwtService;
 import dev.commerce.utils.AuthenticationUtils;
+import dev.commerce.utils.MessageUtils;
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -33,8 +34,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final RefreshTokenService tokenService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationUtils utils;
-    private static final String USER_NOT_FOUND = "User not found";
-
+    private final MessageUtils messageUtils;
 
     @Override
     public LoginResponse login(LoginRequest request) {
@@ -47,7 +47,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         );
 
 
-        var user = userRepository.findByUsername(request.getUsername()).orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
+        var user = userRepository.findByUsername(request.getUsername()).orElseThrow(() -> new UserNotFoundException(messageUtils.toLocale("user.not.found")));
         String accessToken = jwtService.generateAccessToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
         tokenService.saveRefreshToken(RefreshToken.builder()
@@ -85,9 +85,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public String forgotPassword(String email) {
-        Users user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
+        Users user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(messageUtils.toLocale("user.not.found")));
         if(!user.isEnabled()) {
-            throw new InvalidDataException("User account is not activated");
+            throw new InvalidDataException(messageUtils.toLocale("user.account.not.activated"));
         }
 
         String resetToken = jwtService.generateResetPasswordToken(user);
@@ -101,22 +101,22 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public String resetPassword(ResetPasswordRequest request) {
         if(!request.getNewPassword().equals(request.getConfirmPassword())) {
-            throw new InvalidDataException("New password and confirm password do not match");
+            throw new InvalidDataException(messageUtils.toLocale("new.password.confirm.password.not.match"));
         }
         
         final String username = jwtService.extractUsername(request.getToken(), TokenType.RESET_PASSWORD);
         Users user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
+                .orElseThrow(() -> new UserNotFoundException(messageUtils.toLocale("user.not.found")));
         
         if (!jwtService.isTokenValid(request.getToken(), user, TokenType.RESET_PASSWORD)) {
-            throw new InvalidDataException("Invalid or expired reset password token");
+            throw new InvalidDataException(messageUtils.toLocale("invalid.or.expired.reset.password.token"));
         }
         
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
         
         log.info("Password reset successful for user: {}", username);
-        return "Password has been reset successfully";
+        return messageUtils.toLocale("password.reset.success");
     }
 
     @Override
@@ -144,7 +144,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private Users getUserFromRefreshToken(String refreshToken) {
         String username = jwtService.extractUsername(refreshToken, TokenType.REFRESH);
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
+                .orElseThrow(() -> new UserNotFoundException(messageUtils.toLocale("user.not.found")));
     }
 
     private void validateRefreshToken(String refreshToken, Users user) {
@@ -152,6 +152,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new InvalidDataException("Invalid refresh token");
         }
     }
+
 
 
 

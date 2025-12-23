@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class MessageUtils {
     private final MessageSource messageSource;
 
-    public String get(String key){
+    public String toLocale(String key){
         return messageSource.getMessage(key, null, LocaleContextHolder.getLocale());
     }
 }
