@@ -19,7 +19,7 @@ public class I18nConfig {
     }
 
     @Bean
-    public LocaleResolver localResolver() {
+    public LocaleResolver localeResolver() {
         AcceptHeaderLocaleResolver localeResolver = new AcceptHeaderLocaleResolver();
         localeResolver.setDefaultLocale(java.util.Locale.ENGLISH);
         return localeResolver;
