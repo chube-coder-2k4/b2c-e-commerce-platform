@@ -115,6 +115,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDetailResponse getOrderDetails(UUID orderId) {
         Orders orders = getOrderById(orderId);
+        if(orders == null) {
+            throw new ResourceNotFoundException("Orders not found");
+        }
         List<OrderItem> orderItems = orderItemRepository.findByOrders(orders);
         return orderMapper.toOrderDetailResponse(orders, orderItems);
     }
