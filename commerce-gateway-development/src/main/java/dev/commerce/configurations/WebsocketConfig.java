@@ -14,15 +14,6 @@ public class WebsocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/ws")
                 .setAllowedOriginPatterns("*")
                 .withSockJS();
-        ///    var sockJsClientCode = """
-        //    var socket = new SockJS('http://localhost:8080/ws');
-        //    var socket = new SockJS('http://your-server-domain/ws');
-        //    var stompClient = Stomp.over(socket);
-        //    stompClient.connect({}, function(frame) {
-        //    console.log('Connected: ' + frame);
-        //    // Thực hiện các thao tác sau khi kết nối thành công
-        //    });
-        //   """;
     }
 
     @Override
