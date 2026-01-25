@@ -79,7 +79,7 @@ public class RedisConfig {
                         RedisSerializationContext.SerializationPair.fromSerializer(
                                 serializer
                         )
-                );
+                ).enableTimeToIdle();
     }
 
     @Bean
